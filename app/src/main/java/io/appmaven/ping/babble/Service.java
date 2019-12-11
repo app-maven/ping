@@ -3,6 +3,7 @@ package io.appmaven.ping.babble;
 import android.util.Log;
 
 import io.appmaven.ping.babble.transactions.MovePlayerTx;
+import io.appmaven.ping.utils.Vector;
 import io.mosaicnetworks.babble.node.BabbleConfig;
 import io.mosaicnetworks.babble.node.BabbleService;
 
@@ -24,7 +25,7 @@ public class Service extends BabbleService<AppState> {
     }
 
     private Service() {
-        super(new AppState(), new BabbleConfig.Builder().heartbeat(10).logLevel(BabbleConfig.LogLevel.DEBUG).build());
+        super(new AppState(), new BabbleConfig.Builder().heartbeat(10).logLevel(BabbleConfig.LogLevel.ERROR).build());
     }
 
     public void startGame(Ball b) {
@@ -41,8 +42,8 @@ public class Service extends BabbleService<AppState> {
         Log.i("Service", "Submitted NewPlayerTx");
     }
 
-    public void movePlayer(MovePlayerTx.Move move) {
-        MovePlayerTx tx = new MovePlayerTx(move);
+    public void movePlayer(Vector newPos) {
+        MovePlayerTx tx = new MovePlayerTx(newPos);
         getInstance().submitTx(tx);
 
         Log.i("Service", "Submitted MovePlayerTx");

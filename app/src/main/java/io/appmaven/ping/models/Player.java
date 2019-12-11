@@ -1,8 +1,7 @@
 package io.appmaven.ping.models;
 
 import android.graphics.Bitmap;
-
-import com.google.gson.annotations.SerializedName;
+import android.util.Log;
 
 import io.appmaven.ping.sprites.BaseSprite;
 
@@ -10,13 +9,10 @@ import io.appmaven.ping.utils.UnitVector;
 import io.appmaven.ping.utils.Vector;
 
 public class Player extends BaseSprite {
-    @SerializedName("moniker")
     private String moniker;
 
-    @SerializedName("new_pos")
     private Vector newPosition;
 
-    @SerializedName("velocity")
     private int velocity = 50;
 
     public Player(Bitmap image, String moniker, Vector pos) {
@@ -31,15 +27,26 @@ public class Player extends BaseSprite {
         return this.moniker;
     }
 
+    public Vector getNewPosition() {
+        return this.newPosition;
+    }
+
     @Override
     public void update() {
-        if (this.getPosition().y + this.velocity < this.newPosition.y) {
-            UnitVector direction = new UnitVector(0, 1);
-            this.getPosition().add(direction.mult(velocity));
-        } else if (this.getPosition().y - this.velocity > this.newPosition.y) {
-            UnitVector direction = new UnitVector(0, -1);
-            this.getPosition().add(direction.mult(velocity));
+        if (this.pos.y != this.newPosition.y) {
+            UnitVector direction = null;
+
+            if (this.getPosition().y + this.velocity < this.newPosition.y) {
+                direction = new UnitVector(0, 1);
+            } else if (this.getPosition().y - this.velocity > this.newPosition.y) {
+                direction = new UnitVector(0, -1);
+            }
+
+            if (direction != null) {
+                this.setPosition(this.getPosition().add(direction.mult(this.velocity)));
+            }
         }
+
     }
 
     public void moveTo(Vector vector) {

@@ -57,8 +57,10 @@ public class GameScene implements Scene {
     public void draw(Canvas canvas) {
         if(canvas != null) {
             grid.draw(canvas);
+
             Player p1 = Service.getInstance().state.getPlayerOne();
             Player p2 = Service.getInstance().state.getPlayerTwo();
+
             Ball b = Service.getInstance().state.getBall();
 
             if(b != null) {
@@ -75,14 +77,12 @@ public class GameScene implements Scene {
     @Override
     public void receiveTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-            Player p1 = Service.getInstance().state.getPlayerOne();
+            Player activePlayer = Service.getInstance().state.getPlayerOne();
 
-            Vector draggedPosition = new Vector(p1.getPosition().x, (int)event.getY());
-            draggedPosition.y = ((int)event.getY() - (p1.getHeight()/2));
+            Vector draggedPosition = new Vector(activePlayer.getPosition().x, (int)event.getY());
+            draggedPosition.y = ((int)event.getY() - (activePlayer.getHeight() / 2));
 
-            MovePlayerTx.Move move = new MovePlayerTx.Move(draggedPosition);
-
-            Service.getInstance().movePlayer(move);
+            Service.getInstance().movePlayer(draggedPosition);
         }
     }
 

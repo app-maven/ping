@@ -4,6 +4,7 @@ import android.util.Log;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.appmaven.ping.babble.transactions.MovePlayerTx;
 import io.appmaven.ping.babble.transactions.NewBallTx;
 import io.mosaicnetworks.babble.node.BabbleState;
 
@@ -38,10 +39,10 @@ public class AppState implements BabbleState {
 
                     NewPlayerTx newPlayerTx = NewPlayerTx.fromJson(rawTx);
 
-                    if(this.player1 == null) {
+                    if (this.player1 == null) {
                         this.player1 = newPlayerTx.payload;
                         this.active = this.player1;
-                    }  else if(this.player2 == null) {
+                    } else if (this.player2 == null) {
                         this.player2 = newPlayerTx.payload;
                         this.active = this.player2;
                     }
@@ -53,8 +54,19 @@ public class AppState implements BabbleState {
 
                     NewBallTx newBallTx = NewBallTx.fromJson(rawTx);
 
-                    if(this.ball == null) {
+                    if (this.ball == null) {
                         this.ball = newBallTx.payload;
+                    }
+
+                    break;
+
+                case MOVE_PLAYER:
+                    Log.i("AppState", "Decoding MovePlayerTx transaction");
+
+                    MovePlayerTx movePlayerTx = MovePlayerTx.fromJson(rawTx);
+
+                    if (this.player1 != null) {
+                        this.player1.moveTo(movePlayerTx.payload);
                     }
 
                     break;

@@ -1,5 +1,7 @@
 package io.appmaven.ping.utils;
 
+import androidx.annotation.NonNull;
+
 public class Vector {
     public int x;
     public int y;
@@ -15,5 +17,11 @@ public class Vector {
 
     public Vector mult(int magnitude) {
         return new Vector(this.x * magnitude, this.y * magnitude);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Vector(" + this.x + ", " + this.y + ")";
     }
 }
