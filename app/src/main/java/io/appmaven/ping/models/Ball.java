@@ -35,17 +35,17 @@ public class Ball extends BaseSprite {
 
         if (this.direction.x > 0) {
             if (this.pos.x + this.getImage().getWidth() < p2.getPosition().x) {
-                this.setPosition(this.pos.add(this.direction.mult(this.velocity)));
             } else if (this.pos.x + this.getImage().getWidth() >= p2.getPosition().x) {
                 Service.getInstance().hitBall(this.direction.reflectX());
             }
             // Headed towards Player 1
         } else if(this.direction.x < 0) {
             if (this.pos.x > p1.getPosition().x + p1.getWidth()) {
-                this.setPosition(this.pos.add(this.direction.mult(this.velocity)));
             } else if (this.pos.x <= p1.getPosition().x + p1.getWidth() && this.pos.y <= p1.getPosition().y + p1.getHeight() && this.pos.y >= p1.getPosition().y) {
                 Service.getInstance().hitBall(this.direction.reflectX());
             }
         }
+
+        this.setPosition(this.pos.add(this.direction.mult(this.velocity)));
     }
 }

@@ -66,8 +66,8 @@ public class AppState implements BabbleState {
 
                     MovePlayerTx movePlayerTx = MovePlayerTx.fromJson(rawTx);
 
-                    if (this.player1 != null) {
-                        this.player1.moveTo(movePlayerTx.payload);
+                    if (this.active != null) {
+                        this.active.moveTo(movePlayerTx.payload);
                     }
 
                     break;

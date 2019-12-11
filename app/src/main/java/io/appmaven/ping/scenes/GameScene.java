@@ -77,7 +77,7 @@ public class GameScene implements Scene {
     @Override
     public void receiveTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-            Player activePlayer = Service.getInstance().state.getPlayerOne();
+            Player activePlayer = Service.getInstance().state.getActivePlayer();
 
             Vector draggedPosition = new Vector(activePlayer.getPosition().x, (int)event.getY());
             draggedPosition.y = ((int)event.getY() - (activePlayer.getHeight() / 2));
