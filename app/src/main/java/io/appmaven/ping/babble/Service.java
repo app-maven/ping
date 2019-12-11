@@ -2,7 +2,9 @@ package io.appmaven.ping.babble;
 
 import android.util.Log;
 
+import io.appmaven.ping.babble.transactions.HitBallTx;
 import io.appmaven.ping.babble.transactions.MovePlayerTx;
+import io.appmaven.ping.utils.UnitVector;
 import io.appmaven.ping.utils.Vector;
 import io.mosaicnetworks.babble.node.BabbleConfig;
 import io.mosaicnetworks.babble.node.BabbleService;
@@ -47,5 +49,12 @@ public class Service extends BabbleService<AppState> {
         getInstance().submitTx(tx);
 
         Log.i("Service", "Submitted MovePlayerTx");
+    }
+
+    public void hitBall(UnitVector newDir) {
+        HitBallTx tx = new HitBallTx(newDir);
+        getInstance().submitTx(tx);
+
+        Log.i("Service", "Submitted HitBallTx");
     }
 }

@@ -47,7 +47,7 @@ public class MainThread extends Thread {
                     this.gameView.draw(canvas);
                 }
             } catch (Exception e) {
-                Log.e("Error", e.getLocalizedMessage());
+                Log.e("MainThread", e.getLocalizedMessage());
             }
 
             finally {

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.appmaven.ping.babble.transactions.HitBallTx;
 import io.appmaven.ping.babble.transactions.MovePlayerTx;
 import io.appmaven.ping.babble.transactions.NewBallTx;
 import io.mosaicnetworks.babble.node.BabbleState;
@@ -67,6 +68,16 @@ public class AppState implements BabbleState {
 
                     if (this.player1 != null) {
                         this.player1.moveTo(movePlayerTx.payload);
+                    }
+
+                    break;
+
+                case HIT_BALL:
+                    Log.i("AppState", "Decoding HitBallTx transaction");
+                    HitBallTx hitTx = HitBallTx.fromJson(rawTx);
+
+                    if(this.ball != null) {
+                        this.ball.setDirection(hitTx.payload);
                     }
 
                     break;

@@ -11,7 +11,7 @@ public class UnitVector extends Vector {
         int magnitude = (int)Math.sqrt(this.x * this.x + this.y * this.y);
 
         int unitX = this.x / magnitude;
-        int unitY = this.x / magnitude;
+        int unitY = this.y / magnitude;
 
         this.x = (unitX);
         this.y = (unitY);

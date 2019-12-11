@@ -29,7 +29,7 @@ public class GameScene implements Scene {
         Bitmap ball = BitmapFactory.decodeResource(res, R.drawable.ball);
         Vector ballPos = new Vector(p1.getPosition().x + p1.getWidth(), Constants.screenHeight / 2 - ball.getHeight()/2);
 
-        Ball b = new Ball(ball, ballPos, new UnitVector(1, 1));
+        Ball b = new Ball(ball, ballPos, new UnitVector(1, 0));
 
         Service.getInstance().startGame(b);
     }
