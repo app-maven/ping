@@ -12,6 +12,8 @@ public class NewBallTx extends Transaction<Ball> implements BabbleTx {
 
     public NewBallTx(Ball ball) {
         super(ball);
+
+        this.type= Type.INIT_BALL;
     }
 
     public static NewBallTx fromJson(String rawTx) {

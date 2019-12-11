@@ -3,11 +3,14 @@ package io.appmaven.ping.sprites;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.appmaven.ping.utils.Vector;
 
 public class BaseSprite implements Sprite {
     private Bitmap image;
 
+    @SerializedName("pos")
     protected Vector pos;
 
     public BaseSprite(Bitmap image) {

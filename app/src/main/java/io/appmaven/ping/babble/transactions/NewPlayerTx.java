@@ -11,6 +11,8 @@ public class NewPlayerTx extends Transaction<Player> implements BabbleTx {
 
     public NewPlayerTx(Player player) {
         super(player);
+
+        this.type = Type.NEW_PLAYER;
     }
 
     public static NewPlayerTx fromJson(String rawTx) {
@@ -19,6 +21,6 @@ public class NewPlayerTx extends Transaction<Player> implements BabbleTx {
 
     @Override
     public byte[] toBytes() {
-        return new byte[0];
+        return gson.toJson(this).getBytes();
     }
 }

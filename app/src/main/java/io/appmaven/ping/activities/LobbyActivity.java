@@ -25,6 +25,7 @@ public class LobbyActivity extends Activity implements ServiceObserver {
 
         Intent intent = getIntent();
         int type = intent.getIntExtra(Constants.EXTRA_TYPE, 0);
+        Log.i("Hey", "Can you see this?");
 
         switch(type) {
             case 0:

@@ -26,30 +26,37 @@ public class AppState implements BabbleState {
     @Override
     public byte[] applyTransactions(byte[][] transactions) {
         for(byte[] bTx : transactions) {
+            Log.i("AppState", "Received transaction, decoding...");
+
             String rawTx = new String(bTx, UTF_8);
             Transaction tx = Transaction.fromJson(rawTx);
 
+
             switch(tx.type) {
                 case NEW_PLAYER:
-                    Log.i("NewPlayerTx", "Decoding transaction");
+                    Log.i("AppState", "Decoding NewPlayerTx transaction");
+
                     NewPlayerTx newPlayerTx = NewPlayerTx.fromJson(rawTx);
 
                     if(this.player1 == null) {
                         this.player1 = newPlayerTx.payload;
                         this.active = this.player1;
-                    }  else if(this.player2 == null){
+                    }  else if(this.player2 == null) {
                         this.player2 = newPlayerTx.payload;
                         this.active = this.player2;
                     }
 
                     break;
+
                 case INIT_BALL:
-                    Log.i("NewBallTx", "Decoding transaction");
+                    Log.i("AppState", "Decoding NewBallTx transaction");
+
                     NewBallTx newBallTx = NewBallTx.fromJson(rawTx);
 
                     if(this.ball == null) {
                         this.ball = newBallTx.payload;
                     }
+
                     break;
             }
         }
