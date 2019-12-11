@@ -2,6 +2,7 @@ package io.appmaven.ping.babble;
 
 import android.util.Log;
 
+import io.appmaven.ping.babble.transactions.MovePlayerTx;
 import io.mosaicnetworks.babble.node.BabbleConfig;
 import io.mosaicnetworks.babble.node.BabbleService;
 
@@ -29,11 +30,21 @@ public class Service extends BabbleService<AppState> {
     public void startGame(Ball b) {
         NewBallTx ballTx = new NewBallTx(b);
         getInstance().submitTx(ballTx);
+
+        Log.i("Service", "Submitted NewBallTx");
     }
 
     public void addPlayer(Player p) {
-        NewPlayerTx pTx = new NewPlayerTx(p);
-        getInstance().submitTx(pTx);
-        Log.i("Adding Player", "Submitted NewPlayerTx");
+        NewPlayerTx tx = new NewPlayerTx(p);
+        getInstance().submitTx(tx);
+
+        Log.i("Service", "Submitted NewPlayerTx");
+    }
+
+    public void movePlayer(MovePlayerTx.Move move) {
+        MovePlayerTx tx = new MovePlayerTx(move);
+        getInstance().submitTx(tx);
+
+        Log.i("Service", "Submitted MovePlayerTx");
     }
 }

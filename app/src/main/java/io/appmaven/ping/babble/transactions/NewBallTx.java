@@ -22,6 +22,6 @@ public class NewBallTx extends Transaction<Ball> implements BabbleTx {
 
     @Override
     public byte[] toBytes() {
-        return new byte[0];
+        return gson.toJson(this).getBytes();
     }
 }
