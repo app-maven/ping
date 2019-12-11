@@ -6,10 +6,10 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
-import io.appmaven.ping.sprites.Sprite;
+import io.appmaven.ping.sprites.BaseSprite;
 import io.appmaven.ping.utils.Vector;
 
-public class Grid extends Sprite {
+public class Grid extends BaseSprite {
     private final int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private final int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 

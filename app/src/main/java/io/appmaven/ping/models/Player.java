@@ -2,12 +2,12 @@ package io.appmaven.ping.models;
 
 import android.graphics.Bitmap;
 
-import io.appmaven.ping.sprites.Sprite;
+import io.appmaven.ping.sprites.BaseSprite;
 
 import io.appmaven.ping.utils.UnitVector;
 import io.appmaven.ping.utils.Vector;
 
-public class Player extends Sprite {
+public class Player extends BaseSprite {
 
     private String moniker;
 
@@ -28,7 +28,7 @@ public class Player extends Sprite {
     }
 
     @Override
-    public void update(){
+    public void update() {
         if (this.getPosition().y + this.velocity < this.newPosition.y) {
             UnitVector direction = new UnitVector(0, 1);
             this.getPosition().add(direction.mult(velocity));

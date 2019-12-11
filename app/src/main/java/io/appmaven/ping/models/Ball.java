@@ -2,11 +2,11 @@ package io.appmaven.ping.models;
 
 import android.graphics.Bitmap;
 
-import io.appmaven.ping.sprites.Sprite;
+import io.appmaven.ping.sprites.BaseSprite;
 import io.appmaven.ping.utils.UnitVector;
 import io.appmaven.ping.utils.Vector;
 
-public class Ball extends Sprite {
+public class Ball extends BaseSprite {
 
     private UnitVector direction;
 
@@ -21,5 +21,9 @@ public class Ball extends Sprite {
 
     public Vector getDirection() {
         return this.direction;
+    }
+
+    @Override
+    public void update() {
     }
 }
