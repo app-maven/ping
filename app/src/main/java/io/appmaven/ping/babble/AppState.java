@@ -2,6 +2,8 @@ package io.appmaven.ping.babble;
 
 import android.util.Log;
 
+import java.util.HashMap;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import io.appmaven.ping.babble.transactions.HitBallTx;
@@ -18,10 +20,10 @@ import io.appmaven.ping.babble.transactions.NewPlayerTx;
 
 public class AppState implements BabbleState {
 
-    private Player active = null;
+    private HashMap<String, Player> players = new HashMap<>();
 
-    private Player player1 = null;
-    private Player player2 = null;
+    private Player leftPlayer;
+    private Player rightPlayer;
 
     private Ball ball = null;
 
@@ -40,12 +42,17 @@ public class AppState implements BabbleState {
 
                     NewPlayerTx newPlayerTx = NewPlayerTx.fromJson(rawTx);
 
-                    if (this.player1 == null) {
-                        this.player1 = newPlayerTx.payload;
-                        this.active = this.player1;
-                    } else if (this.player2 == null) {
-                        this.player2 = newPlayerTx.payload;
-                        this.active = this.player2;
+                    String publicKey = newPlayerTx.payload.getPublicKey();
+                    Player p = this.players.get(publicKey);
+
+                    if (p == null) {
+                        this.players.put(publicKey, newPlayerTx.payload);
+                    }
+
+                    if (leftPlayer == null) {
+                        this.leftPlayer = newPlayerTx.payload;
+                    } else if (rightPlayer == null) {
+                        this.rightPlayer = newPlayerTx.payload;
                     }
 
                     break;
@@ -66,8 +73,10 @@ public class AppState implements BabbleState {
 
                     MovePlayerTx movePlayerTx = MovePlayerTx.fromJson(rawTx);
 
-                    if (this.active != null) {
-                        this.active.moveTo(movePlayerTx.payload);
+                    Player ctx = this.players.get(movePlayerTx.payload.publicKey);
+
+                    if (ctx != null) {
+                        ctx.moveTo(movePlayerTx.payload.pos);
                     }
 
                     break;
@@ -92,19 +101,23 @@ public class AppState implements BabbleState {
     }
 
     // Getters
-    public Player getPlayerOne() {
-        return this.player1;
-    }
-
-    public Player getPlayerTwo() {
-        return this.player2;
-    }
-
     public Ball getBall() {
         return this.ball;
     }
 
-    public Player getActivePlayer() {
-        return this.active;
+    public Player getPlayer(String publicKey) {
+        return this.players.get(publicKey);
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        return this.players;
+    }
+
+    public Player getLeftPlayer() {
+        return leftPlayer;
+    }
+
+    public Player getRightPlayer() {
+        return rightPlayer;
     }
 }

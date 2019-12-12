@@ -1,12 +1,15 @@
 package io.appmaven.ping.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import io.appmaven.ping.models.Player;
 import io.appmaven.ping.utils.Vector;
@@ -46,11 +49,33 @@ public class LobbyActivity extends Activity implements ServiceObserver {
     }
 
     public void startGame(View view) {
-        this.addPlayerTwo();
+        Player p1 = Service.getInstance().state.getLeftPlayer();
+        Player p2 = Service.getInstance().state.getRightPlayer();
 
-        Intent intent = new Intent(this, GameActivity.class);
+        if (p1 == null || p2 == null) {
+            new AlertDialog.Builder(this)
+                .setTitle("Start Game")
+                .setMessage("Are you sure you want start the game without a Player 2?")
 
-        startActivity(intent);
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        addDebugPlayerTwo();
+
+                        Intent intent = new Intent(LobbyActivity.this, GameActivity.class);
+                        startActivity(intent);
+                    }
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        } else {
+            Intent intent = new Intent(LobbyActivity.this, GameActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void newNode(String moniker) {
@@ -76,6 +101,9 @@ public class LobbyActivity extends Activity implements ServiceObserver {
         Bitmap paddle = BitmapFactory.decodeResource(getResources(), R.drawable.paddle);
         Player player = new Player(paddle, moniker, pos);
 
+        // To uniquely identify the player
+        player.setPublicKey(Service.getInstance().getPublicKey());
+
         Service.getInstance().addPlayer(player);
     }
 
@@ -88,17 +116,45 @@ public class LobbyActivity extends Activity implements ServiceObserver {
 
     public void addPlayerTwo() {
         Bitmap paddle = BitmapFactory.decodeResource(getResources(), R.drawable.paddle);
-        Player p1 = Service.getInstance().state.getPlayerOne();
 
         int x = Constants.screenWidth - Constants.PADDLE_MARGIN - paddle.getWidth() - 15;
-        int y = p1.getPosition().y;
+        int y = Constants.screenHeight / 2 - paddle.getHeight()/2;
 
         Vector p2Pos = new Vector(x, y);
 
         this.addPlayer("Player 2", p2Pos);
     }
 
+    public void addDebugPlayerTwo() {
+        Bitmap paddle = BitmapFactory.decodeResource(getResources(), R.drawable.paddle);
+
+        int x = Constants.screenWidth - Constants.PADDLE_MARGIN - paddle.getWidth() - 15;
+        int y = Constants.screenHeight / 2 - paddle.getHeight()/2;
+
+        Vector p2Pos = new Vector(x, y);
+        Player player = new Player(paddle, "Player 2", p2Pos);
+
+        player.setPublicKey("Player2PubKey");
+
+        Service.getInstance().addPlayer(player);
+    }
+
     @Override
     public void stateUpdated() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Player p1 = Service.getInstance().state.getLeftPlayer();
+                Player p2 = Service.getInstance().state.getRightPlayer();
+
+                if (p1 != null){
+                    ((TextView)findViewById(R.id.txtPlayerOne)).setText(p1.getMoniker());
+                }
+
+                if (p2 != null) {
+                    ((TextView)findViewById(R.id.txtPlayerTwo)).setText(p2.getMoniker());
+                }
+            }
+        });
     }
 }

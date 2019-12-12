@@ -4,7 +4,9 @@ public class UnitVector extends Vector {
     public UnitVector(int x, int y) {
         super(x, y);
 
-        this.normalise();
+        if (this.x != 0 && this.y != 0) {
+            this.normalise();
+        }
     }
 
     private void normalise(){

@@ -2,6 +2,8 @@ package io.appmaven.ping.models;
 
 import android.graphics.Bitmap;
 
+import java.util.Collection;
+
 import io.appmaven.ping.babble.Service;
 import io.appmaven.ping.sprites.BaseSprite;
 import io.appmaven.ping.utils.UnitVector;
@@ -30,18 +32,15 @@ public class Ball extends BaseSprite {
 
     @Override
     public void update() {
-        Player p1 = Service.getInstance().state.getPlayerOne();
-        Player p2 = Service.getInstance().state.getPlayerTwo();
+        Player p1 = Service.getInstance().state.getLeftPlayer();
+        Player p2 = Service.getInstance().state.getRightPlayer();
 
         if (this.direction.x > 0) {
-            if (this.pos.x + this.getImage().getWidth() < p2.getPosition().x) {
-            } else if (this.pos.x + this.getImage().getWidth() >= p2.getPosition().x) {
+            if (this.pos.x + this.getImage().getWidth() >= p2.getPosition().x) {
                 Service.getInstance().hitBall(this.direction.reflectX());
             }
-            // Headed towards Player 1
         } else if(this.direction.x < 0) {
-            if (this.pos.x > p1.getPosition().x + p1.getWidth()) {
-            } else if (this.pos.x <= p1.getPosition().x + p1.getWidth() && this.pos.y <= p1.getPosition().y + p1.getHeight() && this.pos.y >= p1.getPosition().y) {
+            if (this.pos.x <= p1.getPosition().x + p1.getWidth() && this.pos.y <= p1.getPosition().y + p1.getHeight() && this.pos.y >= p1.getPosition().y) {
                 Service.getInstance().hitBall(this.direction.reflectX());
             }
         }

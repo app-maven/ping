@@ -1,7 +1,6 @@
 package io.appmaven.ping.models;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import io.appmaven.ping.sprites.BaseSprite;
 
@@ -12,6 +11,8 @@ public class Player extends BaseSprite {
     private String moniker;
 
     private Vector newPosition;
+
+    private String publicKey = "";
 
     private int velocity = 50;
 
@@ -29,6 +30,13 @@ public class Player extends BaseSprite {
 
     public Vector getNewPosition() {
         return this.newPosition;
+    }
+
+    public String getPublicKey() {
+        return this.publicKey;
+    }
+    public void setPublicKey(String key) {
+        this.publicKey = key;
     }
 
     @Override
