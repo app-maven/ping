@@ -1,3 +1,3 @@
 # Ping (Pong)
 
-P2P Pong powered Babble.
+P2P Pong powered [Babble](https://babble.io)
