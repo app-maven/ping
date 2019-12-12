@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import io.appmaven.ping.models.Ball;
 import io.appmaven.ping.models.Player;
+import io.appmaven.ping.utils.UnitVector;
 import io.appmaven.ping.utils.Vector;
 import io.mosaicnetworks.babble.utils.Utils;
 import io.mosaicnetworks.babble.node.BabbleService;
@@ -28,7 +30,6 @@ public class LobbyActivity extends Activity implements ServiceObserver {
 
         Intent intent = getIntent();
         int type = intent.getIntExtra(Constants.EXTRA_TYPE, 0);
-        Log.i("Hey", "Can you see this?");
 
         switch(type) {
             case 0:
@@ -62,9 +63,6 @@ public class LobbyActivity extends Activity implements ServiceObserver {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         addDebugPlayerTwo();
-
-                        Intent intent = new Intent(LobbyActivity.this, GameActivity.class);
-                        startActivity(intent);
                     }
                 })
 
@@ -147,12 +145,30 @@ public class LobbyActivity extends Activity implements ServiceObserver {
                 Player p1 = Service.getInstance().state.getLeftPlayer();
                 Player p2 = Service.getInstance().state.getRightPlayer();
 
+                Ball ball = Service.getInstance().state.getBall();
+
                 if (p1 != null){
                     ((TextView)findViewById(R.id.txtPlayerOne)).setText(p1.getMoniker());
                 }
 
                 if (p2 != null) {
                     ((TextView)findViewById(R.id.txtPlayerTwo)).setText(p2.getMoniker());
+                }
+
+                if (p1 != null && p2 != null) {
+                    if (Service.getInstance().state.getBall() == null) {
+                        Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
+                        Vector ballPos = new Vector(p1.getPosition().x + p1.getWidth(), Constants.screenHeight / 2 - ballBitmap.getHeight()/2);
+
+                        Ball b = new Ball(ballBitmap, ballPos, new UnitVector(1, 0));
+
+                        Service.getInstance().addBall(b);
+                    }
+                }
+
+                if (p1 != null && p2 != null && ball != null) {
+                    Intent intent = new Intent(LobbyActivity.this, GameActivity.class);
+                    startActivity(intent);
                 }
             }
         });

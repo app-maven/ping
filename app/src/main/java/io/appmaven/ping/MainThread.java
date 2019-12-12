@@ -11,6 +11,7 @@ public class MainThread extends Thread {
     private GameView gameView;
 
     public static Canvas canvas;
+    private boolean canvasLocked = false;
 
     private boolean running;
 
@@ -40,7 +41,14 @@ public class MainThread extends Thread {
             canvas = null;
 
             try {
-                canvas = this.surfaceHolder.lockCanvas();
+                if (!canvasLocked) {
+                    if (canvas == null) {
+                        canvas = surfaceHolder.lockCanvas();
+                        canvasLocked = true;
+                    }
+
+                    Log.i("MainThread", "Locking canvas");
+                }
 
                 synchronized (surfaceHolder) {
                     this.gameView.update();
@@ -51,14 +59,19 @@ public class MainThread extends Thread {
             }
 
             finally {
-                if(canvas!=null) {
+                if (canvas != null) {
                     try {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
+                        if (canvasLocked) {
+                            surfaceHolder.unlockCanvasAndPost(canvas);
+                            canvasLocked = false;
+                            Log.i("MainThread", "Unlocking canvas");
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+
             timeMillis = (System.nanoTime() - startTime) / 1000000;
             waitTime = targetTime - timeMillis;
 

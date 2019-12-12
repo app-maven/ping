@@ -27,7 +27,7 @@ public class Service extends BabbleService<AppState> {
     }
 
     private Service() {
-        super(new AppState(), new BabbleConfig.Builder().heartbeat(10).logLevel(BabbleConfig.LogLevel.ERROR).build());
+        super(new AppState(), new BabbleConfig.Builder().heartbeat(50).logLevel(BabbleConfig.LogLevel.ERROR).build());
     }
 
     public void addBall(Ball b) {

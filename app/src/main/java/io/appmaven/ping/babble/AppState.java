@@ -9,6 +9,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import io.appmaven.ping.babble.transactions.HitBallTx;
 import io.appmaven.ping.babble.transactions.MovePlayerTx;
 import io.appmaven.ping.babble.transactions.NewBallTx;
+import io.appmaven.ping.utils.UnitVector;
 import io.mosaicnetworks.babble.node.BabbleState;
 
 import io.appmaven.ping.models.Ball;
@@ -20,7 +21,9 @@ import io.appmaven.ping.babble.transactions.NewPlayerTx;
 
 public class AppState implements BabbleState {
 
-    private HashMap<String, Player> players = new HashMap<>();
+    private final Object lock = new Object();
+
+    private HashMap<String, Player> players =  new HashMap<>();
 
     private Player leftPlayer;
     private Player rightPlayer;
@@ -42,18 +45,8 @@ public class AppState implements BabbleState {
 
                     NewPlayerTx newPlayerTx = NewPlayerTx.fromJson(rawTx);
 
-                    String publicKey = newPlayerTx.payload.getPublicKey();
-                    Player p = this.players.get(publicKey);
-
-                    if (p == null) {
-                        this.players.put(publicKey, newPlayerTx.payload);
-                    }
-
-                    if (leftPlayer == null) {
-                        this.leftPlayer = newPlayerTx.payload;
-                    } else if (rightPlayer == null) {
-                        this.rightPlayer = newPlayerTx.payload;
-                    }
+                    // Add player
+                    this.addPlayer(newPlayerTx.payload);
 
                     break;
 
@@ -62,9 +55,7 @@ public class AppState implements BabbleState {
 
                     NewBallTx newBallTx = NewBallTx.fromJson(rawTx);
 
-                    if (this.ball == null) {
-                        this.ball = newBallTx.payload;
-                    }
+                    this.addBall(newBallTx.payload);
 
                     break;
 
@@ -73,11 +64,7 @@ public class AppState implements BabbleState {
 
                     MovePlayerTx movePlayerTx = MovePlayerTx.fromJson(rawTx);
 
-                    Player ctx = this.players.get(movePlayerTx.payload.publicKey);
-
-                    if (ctx != null) {
-                        ctx.moveTo(movePlayerTx.payload.pos);
-                    }
+                    this.movePlayer(movePlayerTx.payload);
 
                     break;
 
@@ -85,9 +72,7 @@ public class AppState implements BabbleState {
                     Log.i("AppState", "Decoding HitBallTx transaction");
                     HitBallTx hitTx = HitBallTx.fromJson(rawTx);
 
-                    if(this.ball != null) {
-                        this.ball.setDirection(hitTx.payload);
-                    }
+                    this.hitBall(hitTx.payload);
 
                     break;
             }
@@ -96,28 +81,81 @@ public class AppState implements BabbleState {
         return new byte[0];
     }
 
+    // State Update methods
+    private void addPlayer(Player newPlayer) {
+        synchronized (lock) {
+            Player player = this.players.get(newPlayer.getPublicKey());
+
+            if (player == null) {
+                this.players.put(newPlayer.getPublicKey(), newPlayer);
+            }
+
+            if (leftPlayer == null) {
+                this.leftPlayer = newPlayer;
+            } else if (rightPlayer == null) {
+                this.rightPlayer = newPlayer;
+            }
+        }
+    }
+
+    private void addBall(Ball b) {
+        synchronized (lock) {
+            if (this.ball == null) {
+                this.ball = b;
+            }
+        }
+    }
+
+    private void movePlayer(MovePlayerTx.Payload payload) {
+        synchronized (lock) {
+            Player ctx = this.players.get(payload.publicKey);
+
+            if (ctx != null) {
+                ctx.moveTo(payload.pos);
+            }
+        }
+    }
+
+    private void hitBall(UnitVector direction) {
+        synchronized (lock) {
+            if(this.ball != null) {
+                this.ball.setDirection(direction);
+            }
+        }
+    }
+
     @Override
     public void reset() {
     }
 
-    // Getters
+    // Syncronized Getters
     public Ball getBall() {
-        return this.ball;
+        synchronized (lock) {
+            return this.ball;
+        }
     }
 
     public Player getPlayer(String publicKey) {
-        return this.players.get(publicKey);
+        synchronized (lock) {
+            return this.players.get(publicKey);
+        }
     }
 
     public HashMap<String, Player> getPlayers() {
-        return this.players;
+        synchronized (lock) {
+            return this.players;
+        }
     }
 
     public Player getLeftPlayer() {
-        return leftPlayer;
+        synchronized (lock) {
+            return leftPlayer;
+        }
     }
 
     public Player getRightPlayer() {
-        return rightPlayer;
+        synchronized (lock) {
+            return rightPlayer;
+        }
     }
 }
