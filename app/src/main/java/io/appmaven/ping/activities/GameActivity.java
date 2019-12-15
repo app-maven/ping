@@ -8,7 +8,7 @@ import android.view.WindowManager;
 
 import io.appmaven.ping.GameView;
 
-public class GameActivity  extends Activity {
+public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

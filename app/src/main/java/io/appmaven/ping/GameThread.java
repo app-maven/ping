@@ -4,18 +4,17 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-public class MainThread extends Thread {
+public class GameThread extends Thread {
     private double averageFPS;
 
     private final SurfaceHolder surfaceHolder;
     private GameView gameView;
 
     public static Canvas canvas;
-    private boolean canvasLocked = false;
 
     private boolean running;
 
-    public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
+    public GameThread(SurfaceHolder surfaceHolder, GameView gameView) {
         super();
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
@@ -41,37 +40,25 @@ public class MainThread extends Thread {
             canvas = null;
 
             try {
-                if (!canvasLocked) {
-                    if (canvas == null) {
-                        canvas = surfaceHolder.lockCanvas();
-                        canvasLocked = true;
-                    }
-
-                    Log.i("MainThread", "Locking canvas");
-                }
+                canvas = this.surfaceHolder.lockCanvas();
 
                 synchronized (surfaceHolder) {
                     this.gameView.update();
                     this.gameView.draw(canvas);
                 }
             } catch (Exception e) {
-                Log.e("MainThread", e.getLocalizedMessage());
+                Log.e("GameThread: ", e.getLocalizedMessage());
             }
 
             finally {
-                if (canvas != null) {
+                if(canvas!=null) {
                     try {
-                        if (canvasLocked) {
-                            surfaceHolder.unlockCanvasAndPost(canvas);
-                            canvasLocked = false;
-                            Log.i("MainThread", "Unlocking canvas");
-                        }
+                        surfaceHolder.unlockCanvasAndPost(canvas);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e("GameThread: ", e.getLocalizedMessage());
                     }
                 }
             }
-
             timeMillis = (System.nanoTime() - startTime) / 1000000;
             waitTime = targetTime - timeMillis;
 
@@ -80,7 +67,7 @@ public class MainThread extends Thread {
                     sleep(waitTime);
                 }
             } catch (Exception e) {
-                Log.e("MainThread: ", e.getLocalizedMessage());
+                Log.e("GameThread: ", e.getLocalizedMessage());
             }
 
             totalTime += System.nanoTime() - startTime;

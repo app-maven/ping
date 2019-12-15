@@ -11,13 +11,13 @@ import io.appmaven.ping.scenes.SceneManager;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
-    private MainThread thread;
+    private GameThread thread;
     private SceneManager manager;
 
     public GameView(Context context) {
         super(context);
 
-        this.thread = new MainThread(getHolder(),this);
+        this.thread = new GameThread(getHolder(),this);
         this.manager = new SceneManager(context, getResources());
 
         getHolder().addCallback(this);
@@ -58,7 +58,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-
         this.manager.draw(canvas);
     }
 

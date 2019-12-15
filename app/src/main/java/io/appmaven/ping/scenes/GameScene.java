@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import io.appmaven.ping.Constants;
@@ -23,18 +24,6 @@ public class GameScene implements Scene {
 
     public GameScene(Context ctx, Resources res) {
         this.grid = new Grid(BitmapFactory.decodeResource(res, R.drawable.tile));
-
-        // Get first player in hash map and assign ball
-        if (Service.getInstance().state.getBall() == null) {
-            Player p1 = Service.getInstance().state.getLeftPlayer();
-
-            Bitmap ball = BitmapFactory.decodeResource(res, R.drawable.ball);
-            Vector ballPos = new Vector(p1.getPosition().x + p1.getWidth(), Constants.screenHeight / 2 - ball.getHeight()/2);
-
-            Ball b = new Ball(ball, ballPos, new UnitVector(1, 0));
-
-            Service.getInstance().addBall(b);
-        }
     }
 
     @Override
