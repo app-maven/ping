@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import io.appmaven.ping.Constants;
@@ -23,18 +24,6 @@ public class GameScene implements Scene {
 
     public GameScene(Context ctx, Resources res) {
         this.grid = new Grid(BitmapFactory.decodeResource(res, R.drawable.tile));
-
-        // Get first player in hash map and assign ball
-        if (Service.getInstance().state.getBall() == null) {
-            Player p1 = Service.getInstance().state.getLeftPlayer();
-
-            Bitmap ball = BitmapFactory.decodeResource(res, R.drawable.ball);
-            Vector ballPos = new Vector(p1.getPosition().x + p1.getWidth(), Constants.screenHeight / 2 - ball.getHeight()/2);
-
-            Ball b = new Ball(ball, ballPos, new UnitVector(1, 0));
-
-            Service.getInstance().addBall(b);
-        }
     }
 
     @Override
@@ -46,11 +35,11 @@ public class GameScene implements Scene {
             b.update();
         }
 
-        for (Player p : Service.getInstance().state.getPlayers().values()) {
-            if(p != null) {
-                p.update();
-            }
-        }
+//        for (Player p : Service.getInstance().state.getPlayers().values()) {
+//            if(p != null) {
+//                p.update();
+//            }
+//        }
     }
 
     @Override
@@ -63,25 +52,28 @@ public class GameScene implements Scene {
                 b.draw(canvas);
             }
 
-            for (Player p : Service.getInstance().state.getPlayers().values()) {
-                if(p != null) {
-                    p.draw(canvas);
-                }
-            }
+//            for (Player p : Service.getInstance().state.getPlayers().values()) {
+//                if(p != null) {
+//                    p.draw(canvas);
+//                }
+//            }
         }
     }
 
     @Override
     public void receiveTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+            Log.i("hello", "lol you clieked!");
             Player activePlayer = Service.getInstance().state.getPlayer(Service.getInstance().getPublicKey());
 
             Vector draggedPosition = new Vector(activePlayer.getPosition().x, (int)event.getY());
             draggedPosition.y = ((int)event.getY() - (activePlayer.getHeight() / 2));
 
-            MovePlayerTx.Payload payload = new MovePlayerTx.Payload(activePlayer.getPublicKey(), draggedPosition);
+            if (Math.abs(draggedPosition.y - activePlayer.getPosition().y) >= activePlayer.getVelocity()) {
+                MovePlayerTx.Payload payload = new MovePlayerTx.Payload(activePlayer.getPublicKey(), draggedPosition);
 
-            Service.getInstance().movePlayer(payload);
+                Service.getInstance().movePlayer(payload);
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package io.appmaven.ping.models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.Collection;
 
@@ -22,7 +23,7 @@ public class Ball extends BaseSprite {
         this.direction = direction;
     }
 
-    public Vector getDirection() {
+    public UnitVector getDirection() {
         return this.direction;
     }
 

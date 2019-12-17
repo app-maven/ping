@@ -32,6 +32,10 @@ public class Player extends BaseSprite {
         return this.newPosition;
     }
 
+    public int getVelocity()
+    {
+        return this.velocity;
+    }
     public String getPublicKey() {
         return this.publicKey;
     }

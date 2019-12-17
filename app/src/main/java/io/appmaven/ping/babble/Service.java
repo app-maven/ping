@@ -27,7 +27,7 @@ public class Service extends BabbleService<AppState> {
     }
 
     private Service() {
-        super(new AppState(), new BabbleConfig.Builder().heartbeat(50).logLevel(BabbleConfig.LogLevel.ERROR).build());
+        super(new AppState(), new BabbleConfig.Builder().heartbeat(5).logLevel(BabbleConfig.LogLevel.ERROR).build());
     }
 
     public void addBall(Ball b) {
@@ -48,6 +48,7 @@ public class Service extends BabbleService<AppState> {
         MovePlayerTx tx = new MovePlayerTx(payload);
         getInstance().submitTx(tx);
 
+//        getInstance().state.movePlayer(payload);
         Log.i("Service", "Submitted MovePlayerTx");
     }
 
@@ -55,6 +56,7 @@ public class Service extends BabbleService<AppState> {
         HitBallTx tx = new HitBallTx(newDir);
         getInstance().submitTx(tx);
 
+//        getInstance().state.hitBall(newDir);
         Log.i("Service", "Submitted HitBallTx");
     }
 }

@@ -154,22 +154,6 @@ public class LobbyActivity extends Activity implements ServiceObserver {
                 if (p2 != null) {
                     ((TextView)findViewById(R.id.txtPlayerTwo)).setText(p2.getMoniker());
                 }
-
-                if (p1 != null && p2 != null) {
-                    if (Service.getInstance().state.getBall() == null) {
-                        Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
-                        Vector ballPos = new Vector(p1.getPosition().x + p1.getWidth(), Constants.screenHeight / 2 - ballBitmap.getHeight()/2);
-
-                        Ball b = new Ball(ballBitmap, ballPos, new UnitVector(1, 0));
-
-                        Service.getInstance().addBall(b);
-                    }
-                }
-
-                if (p1 != null && p2 != null && ball != null) {
-                    Intent intent = new Intent(LobbyActivity.this, GameActivity.class);
-                    startActivity(intent);
-                }
             }
         });
     }
