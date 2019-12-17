@@ -35,11 +35,11 @@ public class GameScene implements Scene {
             b.update();
         }
 
-        for (Player p : Service.getInstance().state.getPlayers().values()) {
-            if(p != null) {
-                p.update();
-            }
-        }
+//        for (Player p : Service.getInstance().state.getPlayers().values()) {
+//            if(p != null) {
+//                p.update();
+//            }
+//        }
     }
 
     @Override
@@ -52,25 +52,28 @@ public class GameScene implements Scene {
                 b.draw(canvas);
             }
 
-            for (Player p : Service.getInstance().state.getPlayers().values()) {
-                if(p != null) {
-                    p.draw(canvas);
-                }
-            }
+//            for (Player p : Service.getInstance().state.getPlayers().values()) {
+//                if(p != null) {
+//                    p.draw(canvas);
+//                }
+//            }
         }
     }
 
     @Override
     public void receiveTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+            Log.i("hello", "lol you clieked!");
             Player activePlayer = Service.getInstance().state.getPlayer(Service.getInstance().getPublicKey());
 
             Vector draggedPosition = new Vector(activePlayer.getPosition().x, (int)event.getY());
             draggedPosition.y = ((int)event.getY() - (activePlayer.getHeight() / 2));
 
-            MovePlayerTx.Payload payload = new MovePlayerTx.Payload(activePlayer.getPublicKey(), draggedPosition);
+            if (Math.abs(draggedPosition.y - activePlayer.getPosition().y) >= activePlayer.getVelocity()) {
+                MovePlayerTx.Payload payload = new MovePlayerTx.Payload(activePlayer.getPublicKey(), draggedPosition);
 
-            Service.getInstance().movePlayer(payload);
+                Service.getInstance().movePlayer(payload);
+            }
         }
     }
 

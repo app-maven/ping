@@ -4,7 +4,10 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-public class GameThread extends Thread {
+import io.appmaven.ping.models.Ball;
+import io.mosaicnetworks.babble.node.ServiceObserver;
+
+public class GameThread extends Thread implements ServiceObserver {
     private double averageFPS;
 
     private final SurfaceHolder surfaceHolder;
@@ -16,6 +19,7 @@ public class GameThread extends Thread {
 
     public GameThread(SurfaceHolder surfaceHolder, GameView gameView) {
         super();
+
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
     }
@@ -38,7 +42,6 @@ public class GameThread extends Thread {
         while(running) {
             startTime = System.nanoTime();
             canvas = null;
-
             try {
                 canvas = this.surfaceHolder.lockCanvas();
 
@@ -47,7 +50,7 @@ public class GameThread extends Thread {
                     this.gameView.draw(canvas);
                 }
             } catch (Exception e) {
-                Log.e("GameThread: ", e.getLocalizedMessage());
+                Log.e("GameThread", e.getLocalizedMessage());
             }
 
             finally {
@@ -55,7 +58,7 @@ public class GameThread extends Thread {
                     try {
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     } catch (Exception e) {
-                        Log.e("GameThread: ", e.getLocalizedMessage());
+                        Log.e("GameThread", e.getLocalizedMessage());
                     }
                 }
             }
@@ -67,7 +70,7 @@ public class GameThread extends Thread {
                     sleep(waitTime);
                 }
             } catch (Exception e) {
-                Log.e("GameThread: ", e.getLocalizedMessage());
+                Log.e("GameThread", e.getLocalizedMessage());
             }
 
             totalTime += System.nanoTime() - startTime;
@@ -79,5 +82,10 @@ public class GameThread extends Thread {
                 // System.out.println(averageFPS);
             }
         }
+    }
+
+    @Override
+    public void stateUpdated() {
+
     }
 }
